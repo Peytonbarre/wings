@@ -1,0 +1,6 @@
+com/wings/models/Bird.class
+com/wings/App.class
+com/wings/models/SpottedBird.class
+com/wings/models/Friendship.class
+com/wings/models/User.class
+com/wings/controller/ConsoleMenu.class
