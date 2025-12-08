@@ -4,27 +4,27 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-import com.wings.models.Bird;
+import com.wings.models.SpottedBird;
 import com.wings.repository.SpottedBirdRepository;
 
 public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
 
     @Override
-    public void saveBird(Bird bird) throws SQLException {
+    public void saveSpottedBird(SpottedBird spottedBird) throws SQLException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveBird'");
+        throw new UnsupportedOperationException("Unimplemented method 'saveSpottedBird'");
     }
 
     @Override
-    public Bird getBirdById(UUID birdId) throws SQLException {
+    public List<SpottedBird> getSpottedBirdsByUserId(UUID userId) throws SQLException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBirdById'");
+        throw new UnsupportedOperationException("Unimplemented method 'getSpottedBirdsByUserId'");
     }
 
     @Override
-    public List<Bird> getAllBirds() throws SQLException {
+    public List<SpottedBird> getAllSpottedBirds() throws SQLException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllBirds'");
+        throw new UnsupportedOperationException("Unimplemented method 'getAllSpottedBirds'");
     }
     
 }
