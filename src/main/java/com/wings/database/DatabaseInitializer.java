@@ -10,7 +10,7 @@ public class DatabaseInitializer {
         Statement statement = connection.createStatement();
 
         statement.execute("CREATE TABLE IF NOT EXISTS users (" +
-            "user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "user_id TEXT PRIMARY KEY" +
             "username UNIQUE NOT NULL," +
             "current_streak INTEGER," +
             "total_birds_spotted INTEGER)"
