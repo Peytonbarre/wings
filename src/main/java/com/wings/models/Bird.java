@@ -17,4 +17,7 @@ public class Bird {
     public String getName() { return this.name; };
     public String getHabitat() { return this.habitat; };
     public double getRarity() { return this.rarity; };
+
+    //Todo
+    //ToString and equals
 }

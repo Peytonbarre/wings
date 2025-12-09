@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 public class QueryExecuter {
         public static <T> T executeQuery(String sql, SQLConsumer<PreparedStatement> paramSetter, SQLFunction<ResultSet, T> mapper) throws SQLException {
-            //
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             paramSetter.accept(pstmt);
