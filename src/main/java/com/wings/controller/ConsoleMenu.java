@@ -1,8 +1,11 @@
 package com.wings.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
+import java.util.stream.Collectors;
+
+import com.wings.models.Bird;
 import com.wings.models.User;
 import com.wings.service.BirdingService;
 
@@ -114,7 +117,44 @@ public class ConsoleMenu {
     }
 
     private void handleSpotBird() {
+        try{
+            List<Bird> allBirds = birdingService.getAllBirds();
+            List<Bird> results = allBirds;
 
+            while (true) {
+                consolePrint("Search birds (press ENTER to skip)");
+                String query = scanner.nextLine().toLowerCase();
+                if(!query.isEmpty()){
+                    results = allBirds.stream().filter(bird -> bird.getName().toLowerCase().contains(query)).collect(Collectors.toList());
+                } else {
+                    results = allBirds;
+                }
+                if(results.isEmpty()){
+                    consoleError("No birds found");
+                    continue;
+                }
+                System.out.println("=== RESULTS ===");
+                for(int i = 0; i < results.size(); i++){
+                    Bird bird = results.get(i);
+                    System.out.printf("%d. %-30 | %s | Rarity: %.1f%n", i + 1, bird.getName(), bird.getHabitat(), bird.getRarity());
+                }
+                consolePrint("Select by number! (0 to search again)");
+                int choice = Integer.parseInt(scanner.nextLine());
+                if(choice == 0) {
+                    continue;
+                } else if (choice > 0 && choice <= results.size()) {
+                    Bird selected = results.get(choice-1);
+                    birdingService.spotBird(currentUser, selected.getBirdId());
+                    System.out.println("✓ " + selected.getName() + " spotted!");
+                } else {
+                    consoleError("Invalid selection");
+                }
+            }
+        } catch(SQLException e) {
+            consoleError("Error logging bird spotting: " + e);
+        } catch (IllegalArgumentException e) {
+            consoleError("Error: " + e.getMessage());
+        }
     }
 
     private void handleViewMyBirds() { 

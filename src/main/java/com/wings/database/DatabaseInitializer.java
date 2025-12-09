@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.wings.repository.BirdRepository;
+import com.wings.repository.impl.BirdRepositoryImpl;
+
 public class DatabaseInitializer {
     public static void initialize() throws SQLException {
         Connection connection = DatabaseConnection.getConnection();
@@ -42,5 +45,10 @@ public class DatabaseInitializer {
         );
 
         statement.close();
+
+        BirdRepository birdRepo = new BirdRepositoryImpl();
+        if (birdRepo.getAllBirds().isEmpty()) {
+            BirdDataLoader.loadBirds(birdRepo);
+        }
     }
 }

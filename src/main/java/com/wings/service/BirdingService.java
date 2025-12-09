@@ -3,6 +3,7 @@ package com.wings.service;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import com.wings.models.*;
@@ -41,9 +42,14 @@ public class BirdingService {
         return user;
     }
 
-    //Spot Bird
+    public void spotBird(User currentUser, UUID birdId){
 
-    //Add friend
+    }
+
+    public List<Bird> getAllBirds() throws SQLException {
+        return birdRepo.getAllBirds();
+    }
+
     public void addFriend(User currentUser, String username) throws SQLException {
         if(username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Friend username cannot be empty");
