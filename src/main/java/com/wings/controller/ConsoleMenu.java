@@ -1,24 +1,28 @@
 package com.wings.controller;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.UUID;
 import com.wings.models.User;
+import com.wings.service.BirdingService;
 
 public class ConsoleMenu {
     private Scanner scanner;
-    private int userAuth = -1;
     private User currentUser;
-
+    private BirdingService birdingService;
+    
     private static final String RESET = "\u001B[0m";
     private static final String GREEN = "\u001B[32m";
 
-    public ConsoleMenu() {
+    public ConsoleMenu(BirdingService birdingService) {
         this.scanner = new Scanner(System.in);
+        this.birdingService = birdingService;
+        this.currentUser = null;
     }
 
     public void run() {
         while(true) {
-            if(userAuth == -1){
+            if(currentUser == null){
                 showLoginMenu();
             }else{
                 showMainMenu();
@@ -70,7 +74,17 @@ public class ConsoleMenu {
     }
 
     private void handleLogin() {
-
+        consolePrint("Enter username:");
+        String username = scanner.nextLine();
+        try {
+            User user = birdingService.loginUser(username);
+            this.currentUser = user;
+            consolePrint("Logged in as " + username);
+        } catch (SQLException e) {
+            System.out.println("Error logging in: " + e);
+        } catch (IllegalArgumentException e) {
+            System.out.println("User not found");
+        }
     }
 
     private void handleSignup() {
@@ -78,12 +92,11 @@ public class ConsoleMenu {
         String username = scanner.nextLine();
 
         try {
-            User newUser = new User(UUID.randomUUID(), 0, 0, username);
-            currentUser = newUser;
-            consolePrint("Hello, " + username + "!");
-            userAuth = 1;
-        } catch(IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            birdingService.createUser(username);
+        } catch (SQLException e) {
+            System.out.println("Error creating user: " + e);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error signing up: " + e);
         }
 
         //TODO: Store user
@@ -117,6 +130,6 @@ public class ConsoleMenu {
 
     private void handleLogOut() {
         consolePrint("Logging out...");
-        userAuth = -1;
+        currentUser = null;
     }
 }

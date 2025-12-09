@@ -16,13 +16,13 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
         String sql = "INSERT INTO friendships (userId1, userId2, friendSince) VALUES (?, ?, ?)";
         QueryExecuter.executeUpdate(sql, pstmt -> {
             if(friendship.getUserId1().compareTo(friendship.getUserId2()) < 0){
-                pstmt.setObject(1, friendship.getUserId1());
-                pstmt.setObject(2, friendship.getUserId2());
+                pstmt.setString(1, friendship.getUserId1().toString());
+                pstmt.setString(2, friendship.getUserId2().toString());
             }else{
-                pstmt.setObject(1, friendship.getUserId2());
-                pstmt.setObject(2, friendship.getUserId1());
+                pstmt.setString(1, friendship.getUserId2().toString());
+                pstmt.setString(2, friendship.getUserId1().toString());
             }
-            pstmt.setObject(3, friendship.getFriendSince());
+            pstmt.setString(3, friendship.getFriendSince().toString());
         });
     }
 
@@ -31,14 +31,14 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
         String sql = "SELECT * FROM friendships WHERE userId1 = ? UNION ALL SELECT * FROM frienships WHERE userId2 = ?";
         List<Friendship> frienshipList = new ArrayList<>();
         return QueryExecuter.executeQuery(sql, pstmt -> {
-            pstmt.setObject(1, userId);
-            pstmt.setObject(2, userId);
+            pstmt.setString(1, userId.toString());
+            pstmt.setString(2, userId.toString());
         }, rs -> {
             while(rs.next()) {
                 Friendship friendship = new Friendship(
-                    rs.getObject("userId1", UUID.class),
-                    rs.getObject("userId1", UUID.class),
-                    rs.getObject("friendSince", LocalDateTime.class)
+                    UUID.fromString(rs.getString("userId1")),
+                    UUID.fromString(rs.getString("userId2")),
+                    LocalDateTime.parse(rs.getString("friendSince"))
                 );
                 frienshipList.add(friendship);
             }
@@ -50,10 +50,10 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     public void removeFriendship(UUID userId1, UUID userId2) throws SQLException {
         String sql = "DELETE FROM friendships WHERE (userId1 = ? AND userId2 = ?) OR (userId1 = ? AND userId2 = ?)";
         QueryExecuter.executeUpdate(sql, pstmt -> {
-            pstmt.setObject(1, userId1);
-            pstmt.setObject(2, userId2);
-            pstmt.setObject(3, userId2);
-            pstmt.setObject(4, userId1);
+            pstmt.setString(1, userId1.toString());
+            pstmt.setString(2, userId2.toString());
+            pstmt.setString(3, userId2.toString());
+            pstmt.setString(4, userId1.toString());
         });
     }
     

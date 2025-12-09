@@ -15,6 +15,13 @@ public class User {
         this.username = username;
     }
 
+        public User(UUID userId, String username){
+        this.userId = userId;
+        this.birdsSpotted = 0;
+        this.currentStreak = 0;
+        this.username = username;
+    }
+
     public UUID getUserId() { return this.userId; };
     public int getBirdsSpotted() { return this.birdsSpotted; };
     public void setBirdsSpotted(int birdsSpotted) { this.birdsSpotted = birdsSpotted;};

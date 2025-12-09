@@ -16,10 +16,10 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
     public void saveSpottedBird(SpottedBird spottedBird) throws SQLException {
         String sql = "INSERT INTO spotted_birds (spotted_bird_id, user_id, bird_id, date_spotted) VALUES (?, ?, ?, ?)";
         QueryExecuter.executeUpdate(sql, pstmt -> {
-            pstmt.setObject(1, spottedBird.getSpottedBirdId());
-            pstmt.setObject(2, spottedBird.getUserId());
-            pstmt.setObject(3, spottedBird.getBirdId());
-            pstmt.setObject(4, spottedBird.getDateSpotted());
+            pstmt.setString(1, spottedBird.getSpottedBirdId().toString());
+            pstmt.setString(2, spottedBird.getUserId().toString());
+            pstmt.setString(3, spottedBird.getBirdId().toString());
+            pstmt.setString(4, spottedBird.getDateSpotted().toString());
         });
     }
 
@@ -28,14 +28,14 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
         String sql = "SELECT * FROM spotted_birds WHERE user_id = ?";
         List<SpottedBird> spottedBirdList = new ArrayList<>();
         return QueryExecuter.executeQuery(sql, pstmt -> {
-            pstmt.setObject(1, userId);
+            pstmt.setString(1, userId.toString());
         }, rs -> {
             while(rs.next()) {
                 SpottedBird spottedBird = new SpottedBird(
-                    rs.getObject("spotted_bird_id", UUID.class),
-                    rs.getObject("user_id", UUID.class),
-                    rs.getObject("bird_id", UUID.class),
-                    rs.getObject("date_spotted", LocalDateTime.class)
+                    UUID.fromString(rs.getString("spotted_bird_id")),
+                    UUID.fromString(rs.getString("user_id")),
+                    UUID.fromString(rs.getString("bird_id")),
+                    LocalDateTime.parse(rs.getString("date_spotted"))
                 );
                 spottedBirdList.add(spottedBird);
             }
@@ -50,10 +50,10 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
         return QueryExecuter.executeQuery(sql, pstmt -> {}, rs -> {
             while(rs.next()) {
                 SpottedBird spottedBird = new SpottedBird(
-                    rs.getObject("spotted_bird_id", UUID.class),
-                    rs.getObject("user_id", UUID.class),
-                    rs.getObject("bird_id", UUID.class),
-                    rs.getObject("date_spotted", LocalDateTime.class)
+                    UUID.fromString(rs.getString("spotted_bird_id")),
+                    UUID.fromString(rs.getString("user_id")),
+                    UUID.fromString(rs.getString("bird_id")),
+                    LocalDateTime.parse(rs.getString("date_spotted"))
                 );
                 spottedBirdList.add(spottedBird);
             }
