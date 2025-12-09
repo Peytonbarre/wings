@@ -136,7 +136,7 @@ public class ConsoleMenu {
                 System.out.println("=== RESULTS ===");
                 for(int i = 0; i < results.size(); i++){
                     Bird bird = results.get(i);
-                    System.out.printf("%d. %-30 | %s | Rarity: %.1f%n", i + 1, bird.getName(), bird.getHabitat(), bird.getRarity());
+                    System.out.printf("%d. %-30s | %s | Rarity: %.1f%n", i + 1, bird.getName(), bird.getHabitat(), bird.getRarity());
                 }
                 consolePrint("Select by number! (0 to search again)");
                 int choice = Integer.parseInt(scanner.nextLine());
@@ -146,6 +146,7 @@ public class ConsoleMenu {
                     Bird selected = results.get(choice-1);
                     birdingService.spotBird(currentUser, selected.getBirdId());
                     System.out.println("✓ " + selected.getName() + " spotted!");
+                    break;
                 } else {
                     consoleError("Invalid selection");
                 }
@@ -154,6 +155,7 @@ public class ConsoleMenu {
             consoleError("Error logging bird spotting: " + e);
         } catch (IllegalArgumentException e) {
             consoleError("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
