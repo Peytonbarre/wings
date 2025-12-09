@@ -1,11 +1,13 @@
 package com.wings.controller;
 
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import com.wings.models.Bird;
+import com.wings.models.SpottedBird;
 import com.wings.models.User;
 import com.wings.service.BirdingService;
 
@@ -160,7 +162,19 @@ public class ConsoleMenu {
     }
 
     private void handleViewMyBirds() { 
-
+        try{
+            List<SpottedBird> spottedBirds = birdingService.getMyBirds(currentUser);
+            System.out.println("=== Bird Spottings ===");
+            System.out.printf("%-5s | %-30s | %-20s | %-20s%n", "No.", "Bird Name", "Date Spotted", "Bird ID");
+            for(int i = 0; i < spottedBirds.size(); i++){
+                SpottedBird sb = spottedBirds.get(i);
+                Bird bird = birdingService.getBirdById(sb.getBirdId());
+                System.out.printf("%-5d | %-30s | %-20s | %-20s%n", i + 1, bird.getName(), sb.getDateSpotted().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), sb.getBirdId().toString().substring(0, 8) + "..."
+            );
+            }
+        } catch (SQLException e) {
+            consoleError("Error getting bird spottings: " + e);
+        }
     }
 
     private void handleViewLeaderboard() {

@@ -42,12 +42,21 @@ public class BirdingService {
         return user;
     }
 
-    public void spotBird(User currentUser, UUID birdId){
-
+    public void spotBird(User currentUser, UUID birdId) throws SQLException {
+        SpottedBird spottedBird = new SpottedBird(UUID.randomUUID(), currentUser.getUserId(), birdId, LocalDateTime.now());
+        spottedBirdRepo.saveSpottedBird(spottedBird);
     }
 
     public List<Bird> getAllBirds() throws SQLException {
         return birdRepo.getAllBirds();
+    }
+
+    public List<SpottedBird> getMyBirds(User currentUser) throws SQLException {
+        return spottedBirdRepo.getSpottedBirdsByUserId(currentUser.getUserId());
+    }
+
+    public Bird getBirdById(UUID birdId) throws SQLException{
+        return birdRepo.getBirdById(birdId);
     }
 
     public void addFriend(User currentUser, String username) throws SQLException {

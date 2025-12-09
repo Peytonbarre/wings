@@ -23,7 +23,7 @@ public class BirdRepositoryImpl implements BirdRepository {
 
     @Override
     public Bird getBirdById(UUID birdId) throws SQLException {
-        String sql = "SELECT * FROM birds WHERE id = ?";
+        String sql = "SELECT * FROM birds WHERE bird_id = ?";
         return QueryExecuter.executeQuery(sql, pstmt -> {
             pstmt.setString(1, birdId.toString());
         }, rs -> {
