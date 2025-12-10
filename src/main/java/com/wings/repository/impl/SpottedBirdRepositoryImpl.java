@@ -21,6 +21,11 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
             pstmt.setString(3, spottedBird.getBirdId().toString());
             pstmt.setString(4, spottedBird.getDateSpotted().toString());
         });
+        
+        sql = "UPDATE users SET total_birds_spotted = total_birds_spotted + 1 WHERE user_id = ?";
+        QueryExecuter.executeUpdate(sql, pstmt -> {
+            pstmt.setString(1, spottedBird.getUserId().toString());
+        });
     }
 
     @Override

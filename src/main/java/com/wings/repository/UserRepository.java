@@ -11,4 +11,5 @@ public interface UserRepository {
     User getUserById(UUID id) throws SQLException;
     User getUserByUsername(String username) throws SQLException;
     List<User> getAllUsers() throws SQLException;
+    User[] getTopTenUsers() throws SQLException;
 }

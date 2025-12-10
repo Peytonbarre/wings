@@ -178,7 +178,19 @@ public class ConsoleMenu {
     }
 
     private void handleViewLeaderboard() {
-
+        try{
+            User[] leaderboard = birdingService.getLeaderboard();
+            System.out.println("=== Bird Spottings ===");
+            System.out.printf("%-5s | %-30s | %-20s | %-20s%n", "No.", "Username", "Birds Spotted", "Streak");
+            for(int i = 0; i<leaderboard.length; i++) {
+                if(leaderboard[i] == null) {
+                    break;
+                }
+                System.out.printf("%-5d | %-30s | %-20s | %-20s%n", i + 1, leaderboard[i].getUsername(), leaderboard[i].getBirdsSpotted(), leaderboard[i].getCurrentStreak());
+            }
+        } catch (SQLException e) {
+            consoleError("Error getting leaderboard: " + e);
+        }
     }
 
     private void handleAddFriend() {

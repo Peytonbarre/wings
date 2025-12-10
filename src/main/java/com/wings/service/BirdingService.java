@@ -55,7 +55,9 @@ public class BirdingService {
     }
 
     public List<SpottedBird> getMyBirds(User currentUser) throws SQLException {
-        return spottedBirdRepo.getSpottedBirdsByUserId(currentUser.getUserId());
+        List<SpottedBird> spottedBirdList= spottedBirdRepo.getSpottedBirdsByUserId(currentUser.getUserId());
+        
+        return spottedBirdList;
     }
 
     public Bird getBirdById(UUID birdId) throws SQLException{
@@ -72,5 +74,9 @@ public class BirdingService {
         User friend = userRepo.getUserByUsername(username);
         Friendship friendship = new Friendship(currentUser.getUserId(), friend.getUserId(), LocalDateTime.now());
         friendshipRepo.addFriendship(friendship);
+    }
+
+    public User[] getLeaderboard() throws SQLException {
+        return userRepo.getTopTenUsers();
     }
 }
