@@ -213,7 +213,17 @@ public class ConsoleMenu {
 
     private void handleViewFriends() {
         System.out.println("=== Friends ===");
-            System.out.printf("%-30s | %-20s | %-20s%n | %-20s", "Username", "Birds Spotted", "Streak");
+            System.out.printf("%-30s | %-20s | %-20s%n", "Username", "Birds Spotted", "Streak");
+            // TODO friend since
+            try {
+                List<User> friends = birdingService.getFriends(currentUser.getUserId());
+                for(User friend : friends){
+                    System.out.printf("%-30s | %-20s | %-20s%n", friend.getUsername(), birdingService.getTotalBirdsSpotted(friend), birdingService.getCurrentStreak(friend.getUserId()));
+                }
+            } catch (SQLException e) {
+                consoleError("Error: " + e);
+            }
+            
     }
 
     private void handleViewMyProfile() {

@@ -28,7 +28,7 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
 
     @Override
     public List<Friendship> getFriendshipByUserId(UUID userId) throws SQLException {
-        String sql = "SELECT * FROM friendships WHERE user_id_1 = ? UNION ALL SELECT * FROM frienships WHERE user_id_2 = ?";
+        String sql = "SELECT * FROM friendships WHERE user_id_1 = ? UNION ALL SELECT * FROM friendships WHERE user_id_2 = ?";
         List<Friendship> frienshipList = new ArrayList<>();
         return QueryExecuter.executeQuery(sql, pstmt -> {
             pstmt.setString(1, userId.toString());
@@ -36,8 +36,8 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
         }, rs -> {
             while(rs.next()) {
                 Friendship friendship = new Friendship(
-                    UUID.fromString(rs.getString("userId1")),
-                    UUID.fromString(rs.getString("userId2")),
+                    UUID.fromString(rs.getString("user_id_1")),
+                    UUID.fromString(rs.getString("user_id_2")),
                     LocalDateTime.parse(rs.getString("friend_since"))
                 );
                 frienshipList.add(friendship);

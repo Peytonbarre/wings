@@ -103,7 +103,7 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
             if(rs.next()){
                 return rs.getInt("streak");
             }
-            return null;
+            return 0;
         });
     }
 }

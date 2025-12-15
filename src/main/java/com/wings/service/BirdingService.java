@@ -88,17 +88,21 @@ public class BirdingService {
         List<Friendship> friends = friendshipRepo.getFriendshipByUserId(userId);
         List<User> friendList = new ArrayList<>();
         for(Friendship friend : friends) {
-            UUID friendId = userId == friend.getUserId1() ? friend.getUserId2() : friend.getUserId1();
+            UUID friendId = (userId == friend.getUserId1() ? friend.getUserId1() : friend.getUserId2());
             User user = new User(
                 friendId,
-                userRepo.getUserById(userId).getUsername()
+                userRepo.getUserById(friendId).getUsername()
             );
             friendList.add(user);
         }
         return friendList;
     }
 
-    // TODO - Ask degree of seperation, up to personal direction?
+    // public LocalDateTime getFriendSince(UUID userId1, UUID userId2) throws SQLException {
+    //     friendshipRepo.ge
+    // }
+
+    // TODO - Keep joins and aggregations in the repository layer
     public Map<User, Integer> getLeaderboard() throws SQLException {
         Map<User, Integer> processedMap = new HashMap<>();
         Map<UUID, Integer> rawMap = spottedBirdRepo.getTopTenBirdsSpottedUsersByUserId();
