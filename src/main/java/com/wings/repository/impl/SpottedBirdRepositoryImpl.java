@@ -40,7 +40,7 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
                     UUID.fromString(rs.getString("user_id")),
                     UUID.fromString(rs.getString("bird_id")),
                     LocalDateTime.parse(rs.getString("date_spotted"),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"))
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss[.SSSSSS]"))
                 );
                 spottedBirdList.add(spottedBird);
             }

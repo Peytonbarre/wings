@@ -173,7 +173,7 @@ public class ConsoleMenu {
             for(int i = 0; i < spottedBirds.size(); i++){
                 SpottedBird sb = spottedBirds.get(i);
                 Bird bird = birdingService.getBirdById(sb.getBirdId());
-                System.out.printf("%-5d | %-30s | %-20s | %-20s%n", i + 1, bird.getName(), sb.getDateSpotted().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), sb.getBirdId().toString().substring(0, 8) + "..."
+                System.out.printf("%-5d | %-30s | %-20s | %-20s%n", i + 1, bird.getName(), sb.getDateSpotted().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")), sb.getBirdId().toString().substring(0, 8) + "..."
             );
             }
         } catch (SQLException e) {
