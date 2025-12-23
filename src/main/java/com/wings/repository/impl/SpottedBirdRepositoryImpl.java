@@ -2,14 +2,17 @@ package com.wings.repository.impl;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import com.wings.database.QueryExecuter;
 import com.wings.models.SpottedBird;
+import com.wings.models.User;
 import com.wings.repository.SpottedBirdRepository;
 
 public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
@@ -21,7 +24,7 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
             pstmt.setString(1, spottedBird.getSpottedBirdId().toString());
             pstmt.setString(2, spottedBird.getUserId().toString());
             pstmt.setString(3, spottedBird.getBirdId().toString());
-            pstmt.setString(4, spottedBird.getDateSpotted().toString());
+            pstmt.setObject(4, spottedBird.getDateSpotted());
         });
     }
 
@@ -37,7 +40,8 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
                     UUID.fromString(rs.getString("spotted_bird_id")),
                     UUID.fromString(rs.getString("user_id")),
                     UUID.fromString(rs.getString("bird_id")),
-                    LocalDateTime.parse(rs.getString("date_spotted"))
+                    LocalDateTime.parse(rs.getString("date_spotted"),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"))
                 );
                 spottedBirdList.add(spottedBird);
             }
@@ -55,7 +59,9 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
                     UUID.fromString(rs.getString("spotted_bird_id")),
                     UUID.fromString(rs.getString("user_id")),
                     UUID.fromString(rs.getString("bird_id")),
-                    LocalDateTime.parse(rs.getString("date_spotted"))
+                    LocalDateTime.parse(rs.getString("date_spotted"),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+                )
                 );
                 spottedBirdList.add(spottedBird);
             }
@@ -78,26 +84,39 @@ public class SpottedBirdRepositoryImpl implements SpottedBirdRepository {
     }
 
     @Override
-    public Map<UUID, Integer> getTopTenBirdsSpottedUsersByUserId() throws SQLException {
-        String sql = "SELECT user_id, COUNT(bird_id) AS bird_count FROM spotted_birds GROUP BY user_id ORDER BY bird_count DESC";
-        Map<UUID, Integer> topTenList = new HashMap<>();
-        return QueryExecuter.executeQuery(sql, pstmt->{}, rs -> {
+    public Map<User, Integer> getTopTenBirdsSpottedUsersByUserId() throws SQLException {
+        String sql = """
+            SELECT u.user_id, u.username, COUNT(sb.bird_id) AS bird_count 
+            FROM users u
+            LEFT JOIN spotted_birds sb ON u.user_id = sb.user_id
+            GROUP BY u.user_id, u.username
+            ORDER BY bird_count DESC
+            LIMIT 10
+            """;
+        Map<User, Integer> leaderboard = new LinkedHashMap<>();
+        return QueryExecuter.executeQuery(sql, pstmt -> {}, rs -> {
             while(rs.next()){
-                topTenList.put(UUID.fromString(rs.getString("user_id")),Integer.valueOf(rs.getInt("bird_count")));
+                User user = new User(
+                    UUID.fromString(rs.getString("user_id")),
+                    rs.getString("username")
+                );
+                int birdCount = rs.getInt("bird_count");
+                leaderboard.put(user, birdCount);
             }
-            return topTenList;
+            return leaderboard;
         });
     }
 
     @Override
     public int getStreakByUserId(UUID userId) throws SQLException {
         String sql = "SELECT \n" +
-                    "  SUM(count(*)) OVER (ORDER BY strftime('%D', date_spotted)) as streak\n" +
+                    "  COUNT(*) OVER (ORDER BY CAST(date_spotted AS DATE)) as streak\n" +
                     "FROM spotted_birds\n" +
                     "WHERE user_id = ?\n" +
-                    "GROUP BY strftime('%D', date_spotted)\n" +
-                    "ORDER BY strftime('%D', date_spotted)";
-        return QueryExecuter.executeQuery(sql,pstmt -> {
+                    "GROUP BY CAST(date_spotted AS DATE)\n" +
+                    "ORDER BY CAST(date_spotted AS DATE) DESC\n" +
+                    "LIMIT 1";
+        return QueryExecuter.executeQuery(sql, pstmt -> {
             pstmt.setString(1, userId.toString());
         }, rs -> {
             if(rs.next()){

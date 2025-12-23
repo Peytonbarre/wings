@@ -73,23 +73,4 @@ public class UserRepositoryImpl implements UserRepository {
             return userList;
         });
     }
-
-    //TODO
-    // @Override
-    // public User[] getTopTenUsers() throws SQLException {
-    //     String sql = "SELECT * FROM users ORDER BY total_birds_spotted DESC LIMIT 10";
-    //     User[] userList = new User[10];
-    //     return QueryExecuter.executeQuery(sql, pstmt -> {}, rs -> {
-    //         int iterator = 0;
-    //         while(rs.next()) {
-    //             User user = new User (
-    //                 UUID.fromString(rs.getString("user_id")),
-    //                 rs.getInt("current_streak"),
-    //                 rs.getString("username")
-    //             );
-    //             userList[iterator++] = user;
-    //         }
-    //         return userList;
-    //     });
-    // }
 }

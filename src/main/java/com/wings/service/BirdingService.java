@@ -88,7 +88,7 @@ public class BirdingService {
         List<Friendship> friends = friendshipRepo.getFriendshipByUserId(userId);
         List<User> friendList = new ArrayList<>();
         for(Friendship friend : friends) {
-            UUID friendId = (userId == friend.getUserId1() ? friend.getUserId1() : friend.getUserId2());
+            UUID friendId = (userId.equals(friend.getUserId1()) ? friend.getUserId2() : friend.getUserId1());
             User user = new User(
                 friendId,
                 userRepo.getUserById(friendId).getUsername()
@@ -98,23 +98,8 @@ public class BirdingService {
         return friendList;
     }
 
-    // public LocalDateTime getFriendSince(UUID userId1, UUID userId2) throws SQLException {
-    //     friendshipRepo.ge
-    // }
-
-    // TODO - Keep joins and aggregations in the repository layer
     public Map<User, Integer> getLeaderboard() throws SQLException {
-        Map<User, Integer> processedMap = new HashMap<>();
-        Map<UUID, Integer> rawMap = spottedBirdRepo.getTopTenBirdsSpottedUsersByUserId();
-        rawMap.forEach((uuid, count) -> {
-            try {
-                User user = userRepo.getUserById(uuid);
-                processedMap.put(user, count);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-        return processedMap;
+        return spottedBirdRepo.getTopTenBirdsSpottedUsersByUserId();
     }
 
     public int getTotalBirdsSpotted(User user) throws SQLException {

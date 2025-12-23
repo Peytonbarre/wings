@@ -13,7 +13,7 @@ public class User {
         this.username = username;
     }
 
-        public User(UUID userId, String username){
+    public User(UUID userId, String username){
         this.userId = userId;
         this.currentStreak = 0;
         this.username = username;

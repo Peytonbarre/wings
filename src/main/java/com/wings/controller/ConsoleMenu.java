@@ -214,7 +214,6 @@ public class ConsoleMenu {
     private void handleViewFriends() {
         System.out.println("=== Friends ===");
             System.out.printf("%-30s | %-20s | %-20s%n", "Username", "Birds Spotted", "Streak");
-            // TODO friend since
             try {
                 List<User> friends = birdingService.getFriends(currentUser.getUserId());
                 for(User friend : friends){

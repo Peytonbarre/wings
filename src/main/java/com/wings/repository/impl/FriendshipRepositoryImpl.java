@@ -2,6 +2,7 @@ package com.wings.repository.impl;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
                 pstmt.setString(1, friendship.getUserId2().toString());
                 pstmt.setString(2, friendship.getUserId1().toString());
             }
-            pstmt.setString(3, friendship.getFriendSince().toString());
+            pstmt.setObject(3, friendship.getFriendSince());
         });
     }
 
@@ -38,7 +39,9 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
                 Friendship friendship = new Friendship(
                     UUID.fromString(rs.getString("user_id_1")),
                     UUID.fromString(rs.getString("user_id_2")),
-                    LocalDateTime.parse(rs.getString("friend_since"))
+                    LocalDateTime.parse(rs.getString("friend_since"),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+                )
                 );
                 frienshipList.add(friendship);
             }
